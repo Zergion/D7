@@ -1,0 +1,12 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+News
+{% endblock title %}
+
+
+{% block content %}
+<h1>{{ Новость на которую Вы нажали! }}</h1>
+<h3>{{ time_now|date:'M d Y' }}</h3>
+{% endblock content %}

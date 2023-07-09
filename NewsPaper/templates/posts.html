@@ -1,0 +1,76 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+<!-- Подключаем новый файл с нашим тегом -->
+{% load custom_tags %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+   <h1>Все новости</h1>
+   <h3>{% current_time '%b %d %Y %A' %}</h3>
+   <h3> {{ post|default_if_none:"Чуть позже сообщим о новостях!" }} </h3>
+   <h2>Количество новостей: {{ posts|length }}</h2>
+
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <!-- Кнопка отправки данных формы-->
+        <input type="submit" value="Найти" />
+    </form>
+
+    <hr>
+    {% if posts %}
+        <table border="1" cellspacing="20" cellpadding="30">
+            <tr height="50"><th>
+                    <!--Отразим (автора) название, (choice),  текст и дату загрузки в формате день.месяц.год.-->
+                    <td>Автор</td>
+                    <td>Название</td>
+                     <!--<td>Статьи/Новости</td>-->
+                    <td>Текст</td>
+                    <td>Дата публикации</td>
+                    <!-- <td>Рейтинг</td>-->
+                </th></tr>
+
+                {% for post in posts %}
+                <tr><th>
+                    <td align="left">{{ post.author}}</td>
+                    <td>{{ post.title| censor }}</td>
+                    <!--<td>{{ post.choice}}</td>-->
+                    <td align="left">{{ post.text|truncatechars:21 }}</td>
+                    <!--  <td>{{ post.choice.name }}</td> -->
+                    <td align="right">{{ post.posting_time|date:'d.m.Y' }}</td>
+                    <!--<td>{{ post.post_rating }}</td>-->
+                </th></tr>
+                {% endfor %}
+        </table>
+
+    {% else %}
+        <h2>Увы новостей нет!</h2>
+
+    {% endif %}
+    <!--Добавляем пагинацию на страницу-->
+    <!--Информация о предыдущих страницах-->
+    {% if page_obj.has_previous %}
+        {# Для каждой ссылки пагинации указываем обработку через тег #}
+        <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    <!--Информация о текущей странице-->
+    {{ page_obj.number }}
+
+    <!--Информация о следующих страницах-->
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock content %}

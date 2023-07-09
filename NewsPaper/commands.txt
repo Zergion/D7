@@ -1,0 +1,55 @@
+User.objects.create_user('Vasiliy')
+User.objects.create_user('Alexander')
+
+Author.objects.create(user=User.objects.get(username="Vasiliy"))
+Author.objects.create(user=User.objects.get(username="Alexander"))
+
+Category.objects.create(name="Politics")
+Category.objects.create(name="Sport")
+Category.objects.create(name="Economics")
+Category.objects.create(name="Science")
+
+Post.objects.create(author=Author.objects.get(user__username="Vasiliy"),type="AR",header="new invention", text="Spicy jalapeno salami drumstick short loin bacon, cupim beef ball tip kevin frankfurter turducken ham pastrami chuck pi
+canha. Pig cupim salami ball tip, andouille cow meatloaf shank tail spare ribs tenderloin frankfurter turducken. Boudin prosciutto pig filet mignon, landjaeger beef shoulder biltong andouille meatloaf meatball tongue chuck capicola. Tu
+rducken meatloaf jerky boudin. Tri-tip swine ribeye, frankfurter fatback corned beef turkey. Pig landjaeger kevin, ham sirloin flank meatball kielbasa capicola pork loin shoulder cow bresaola doner.")
+
+Post.objects.create(author=Author.objects.get(user__username="Alexander"),type="AR",header="old invention", text="Tenderloin shoulder andouille meatloaf frankfurter short loin doner alcatra jerky bacon sirloin hamburger salami chuc
+k tail. Bacon buffalo jowl alcatra doner ham prosciutto short ribs tail tongue. Shank filet mignon pork loin tongue pork chop, tri-tip corned beef tenderloin pork. Ball tip ground round boudin cow strip steak pork belly landjaeger.")
+
+Post.objects.create(author=Author.objects.get(user__username="Alexander"),type="NW",header="something happened", text="Spicy jalapeno tempor ad burgdoggen, id nulla voluptate cupim pork chop. Ex mollit aliquip, ut cupidatat swine p
+roident short ribs fatback. Sunt turkey strip steak, consequat proident corned beef ham quis bacon est porchetta shankle in cow. Prosciutto ut ullamco pork chop, ut consequat tongue. Cillum eu kevin strip steak, spare ribs laborum meat
+loaf.")
+
+Post.objects.get(pk=1).categories.add(Category.objects.get(pk=4),Category.objects.get(pk=3))
+Post.objects.get(pk=2).categories.add(Category.objects.get(pk=4),Category.objects.get(pk=2))
+Post.objects.get(pk=3).categories.add(Category.objects.get(pk=1),Category.objects.get(pk=3))
+
+Comment.objects.create(post=Post.objects.get(pk=1),user=User.objects.get(pk=2),text="Andouille in sint officia capicola beef ea eiusmod doner picanha")
+Comment.objects.create(post=Post.objects.get(pk=2),user=User.objects.get(pk=1),text="Proident magna cupidatat tri-tip pork loin.")
+Comment.objects.create(post=Post.objects.get(pk=3),user=User.objects.get(pk=1),text="In sausage pig eu, landjaeger qui sint non salami.")
+Comment.objects.create(post=Post.objects.get(pk=3),user=User.objects.get(pk=2),text="Ut tongue consequat cupidatat, boudin kevin strip steak anim filet mignon meatball chuck incididunt esse.")
+
+Post.objects.get(pk=1).like().like().like().dislike()
+Post.objects.get(pk=2).like().like().like().dislike().like().like()
+Post.objects.get(pk=3).like().like().like().dislike().dislike().dislike().dislike()
+
+Comment.objects.get(pk=1).dislike().dislike()
+Comment.objects.get(pk=2).like().like()
+Comment.objects.get(pk=3).like().like().like()
+Comment.objects.get(pk=4).like().like().like().like()
+
+Author.objects.get(pk=1).update_rating()
+Author.objects.get(pk=2).update_rating()
+
+b = Author.objects.all().order_by("-rating").values("user__username","rating")[0]
+b["user__username"]
+b["rating"]
+
+b = Post.objects.all().order_by("-rating").first()
+b.creation_time.date().isoformat()
+b.author.user.username
+b.rating
+b.header
+b.preview()
+
+b.posted_comments.all().values("creation_time","user__username","rating","text")

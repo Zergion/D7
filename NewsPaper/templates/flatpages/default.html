@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+
+import string
+
+
+def censor(text, bad_words):
+    text_list = text.split()
+    censored_text_list = []
+
+    for word in text_list:
+        clean_word = ''.join(c for c in word if c not in string.punctuation)
+        if clean_word.lower() in bad_words:
+            censored_word = clean_word[0] + (len(clean_word) - 1) * '*'
+            censored_text_list.append(word.replace(clean_word, censored_word))
+        else:
+            censored_text_list.append(word)
+
+    return ' '.join(censored_text_list)
+
+
+text = "Слово прекрасное, но вот слово, со знаком препинания, не такое прекрасное!"
+bad_words = ["слово", "прекрасное"]
+
+censored_text = censor(text, bad_words)
+# С**** п*********, но вот с****, со знаком препинания, не такое п*********!
